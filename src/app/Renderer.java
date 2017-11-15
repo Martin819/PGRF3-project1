@@ -23,7 +23,8 @@ import java.awt.event.*;
 
 public class Renderer implements GLEventListener, MouseListener,
 		MouseMotionListener, KeyListener {
-    public static final int FUNCTION_SADDLE = 0, FUNCTION_SNAKE = 1, FUNCTION_CONE = 2, FUNCTION_SOMBRERO = 3, FUNCTION_MUSHROOM = 4, FUNCTION_WINE_GLASS = 5, FUNCTION_SPHERE = 6, FUNCTION_ELHEAD = 7, FUNCTION_ALIEN = 8;
+    public static final int FUNCTION_SADDLE = 0, FUNCTION_SNAKE = 1, FUNCTION_CONE = 2, FUNCTION_SOMBRERO = 3, FUNCTION_MUSHROOM = 4, FUNCTION_WINE_GLASS = 5,
+            FUNCTION_SPHERE = 6, FUNCTION_ELHEAD = 7, FUNCTION_ALIEN = 8, FUNCTION_ROSE = 9, FUNCTION_RAINDROP = 10, FUNCTION_FOUNTAIN = 11;
     public static final int MAPPING_NONE = 0, MAPPING_NORMAL = 1, MAPPING_PARALLAX = 2;
 
 	int width, height, ox, oy, polygonMode = GL2GL3.GL_FILL;
@@ -71,7 +72,7 @@ public class Renderer implements GLEventListener, MouseListener,
         texture = new OGLTexture2D(gl, "/textures/bricks.jpg");
         textureNormal = new OGLTexture2D(gl, "/textures/bricksn.png");
         textureHeight = new OGLTexture2D(gl, "/textures/bricksh.png");
-        grid = MeshGenerator.generateGrid(gl, 10, 10, "inPos");
+        grid = MeshGenerator.generateGrid(gl, 100, 100, "inPos");
 		gl.glEnable(GL2GL3.GL_DEPTH_TEST);
 	}
 

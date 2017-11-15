@@ -132,6 +132,21 @@ public class JOGLApp {
                 menuObjectElHead.addActionListener(e -> ren.setFunction(Renderer.FUNCTION_ELHEAD));
                 sphericalObjects.add(menuObjectElHead);
                 btnFunctions.add(menuObjectElHead);
+/* ROSE */
+                JMenuItem menuObjectRose = new JCheckBoxMenuItem("Rose");
+                menuObjectRose.addActionListener(e -> ren.setFunction(Renderer.FUNCTION_ROSE));
+                sphericalObjects.add(menuObjectRose);
+                btnFunctions.add(menuObjectRose);
+/* RAINDROP */
+                JMenuItem menuObjectRainDrop = new JCheckBoxMenuItem("Rain Drop");
+                menuObjectRainDrop.addActionListener(e -> ren.setFunction(Renderer.FUNCTION_RAINDROP));
+                sphericalObjects.add(menuObjectRainDrop);
+                btnFunctions.add(menuObjectRainDrop);
+/* FOUNTAIN */
+                JMenuItem menuObjectFountain = new JCheckBoxMenuItem("Fountain");
+                menuObjectFountain.addActionListener(e -> ren.setFunction(Renderer.FUNCTION_FOUNTAIN));
+                sphericalObjects.add(menuObjectFountain);
+                btnFunctions.add(menuObjectFountain);
 
             objectsMenu.add(sphericalObjects);
 
