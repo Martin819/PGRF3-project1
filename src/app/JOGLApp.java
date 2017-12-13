@@ -8,10 +8,12 @@ import com.jogamp.opengl.util.FPSAnimator;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 
 public class JOGLApp {
 	private static final int FPS = 60; // animator's target frames per second
@@ -20,7 +22,9 @@ public class JOGLApp {
 	private static JMenu mappingMenu;
 	private static Renderer ren;
 	private static JCheckBoxMenuItem jchkUseTexture;
-	private static final Dimension windowSize= new Dimension(1024, 768);
+	private static JSlider parallaxCoefSlider;
+	private static JLabel sliderValue;
+    private static final Dimension windowSize= new Dimension(1024, 768);
 	private static Image info;
     public static void main(String[] args) {
 		try {
@@ -180,17 +184,26 @@ public class JOGLApp {
 		ButtonGroup btnMapping = new ButtonGroup();
 /* NONE */
             JMenuItem menuNoMapping = new JCheckBoxMenuItem("None",true);
-            menuNoMapping.addActionListener(e -> ren.setMappingType(Renderer.MAPPING_NONE));
+            menuNoMapping.addActionListener(e -> {
+                ren.setMappingType(Renderer.MAPPING_NONE);
+                parallaxCoefSlider.setEnabled(false);
+            });
             mappingMenu.add(menuNoMapping);
             btnMapping.add(menuNoMapping);
 /* NORMAL */
             JMenuItem menuNormalMapping = new JCheckBoxMenuItem("Normal");
-            menuNormalMapping.addActionListener(e -> ren.setMappingType(Renderer.MAPPING_NORMAL));
+            menuNormalMapping.addActionListener(e -> {
+                ren.setMappingType(Renderer.MAPPING_NORMAL);
+                parallaxCoefSlider.setEnabled(false);
+            });
             mappingMenu.add(menuNormalMapping);
             btnMapping.add(menuNormalMapping);
 /* PARALLAX */
             JMenuItem menuParallaxMapping = new JCheckBoxMenuItem("Parallax");
-            menuParallaxMapping.addActionListener(e -> ren.setMappingType(Renderer.MAPPING_PARALLAX));
+            menuParallaxMapping.addActionListener(e -> {
+                ren.setMappingType(Renderer.MAPPING_PARALLAX);
+                parallaxCoefSlider.setEnabled(true);
+            });
             mappingMenu.add(menuParallaxMapping);
             btnMapping.add(menuParallaxMapping);
 
@@ -203,7 +216,31 @@ public class JOGLApp {
 				toggleMappingMenu(jchkUseTexture.getState());
 		});
 		menuBar.add(jchkUseTexture);
-		menuBar.add(Box.createHorizontalGlue());
+
+/* PARALLAX_SLIDER */
+		parallaxCoefSlider = new JSlider(-10, 10);
+		parallaxCoefSlider.setMajorTickSpacing(5);
+		parallaxCoefSlider.setMinorTickSpacing(1);
+		parallaxCoefSlider.setPaintTicks(true);
+        Hashtable labelTable = new Hashtable();
+        labelTable.put(parallaxCoefSlider.getMinimum(), new JLabel("MIN") );
+        labelTable.put(0, new JLabel("0") );
+        labelTable.put(parallaxCoefSlider.getMaximum(), new JLabel("MAX") );
+        parallaxCoefSlider.setLabelTable( labelTable );
+        parallaxCoefSlider.setPaintLabels(true);
+        parallaxCoefSlider.setEnabled(false);
+        JLabel sliderLabel = new JLabel("Parallax Mapping Coefficient:  ", JLabel.CENTER);
+        sliderValue = new JLabel(String.valueOf(parallaxCoefSlider.getValue()));
+        sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		parallaxCoefSlider.addChangeListener(e1 -> {
+		    ren.setParallaxCoef((float) parallaxCoefSlider.getValue() / 100);
+		    updateSliderValue();
+        });
+		menuBar.add(sliderLabel);
+		menuBar.add(sliderValue);
+		menuBar.add(Box.createRigidArea(new Dimension(15, 10)));
+		menuBar.add(parallaxCoefSlider);
+        menuBar.add(Box.createHorizontalGlue());
 
 /* INFO */
 		try
@@ -229,6 +266,13 @@ public class JOGLApp {
 		if(!state || jchkUseTexture.getState()){
 			mappingMenu.setEnabled(state);
 		}
+		if(!jchkUseTexture.getState()){
+            parallaxCoefSlider.setEnabled(false);
+        }
 	}
+
+	private static void updateSliderValue(){
+        sliderValue.setText(String.valueOf(parallaxCoefSlider.getValue()));
+    }
 
 }
