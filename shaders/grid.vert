@@ -155,6 +155,7 @@ vec3 funcRose(vec2 inPos){
 
 /* selector */
 vec3 paramPos(vec2 inPos){
+    float w = cos(time) * 0.5 + 0.5;
 	if(renderFunction == 0){
 		return funcSaddle(inPos);
 	}else if(renderFunction == 1){
@@ -178,7 +179,8 @@ vec3 paramPos(vec2 inPos){
     }else if(renderFunction == 10){
         return funcRainDrop(inPos);
     }else if(renderFunction == 11){
-        return funcFountain(inPos);
+/*        return funcFountain(inPos);*/
+          return w * funcFountain(inPos) + (1 - w) * funcRainDrop(inPos);
     }
 }
 vec3 paramNormal(vec2 inPos) {
