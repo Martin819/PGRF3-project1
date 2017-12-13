@@ -11,6 +11,7 @@ uniform sampler2D textureHeight;
 uniform float lightPerVertex;
 uniform float useTexture;
 uniform float mappingType;
+uniform float parallaxCoef;
 
 void main() {
 	vec3 fragColor;
@@ -23,7 +24,7 @@ void main() {
 			if(mappingType == 2){
 				// parallax mapping		
 				float height = texture2D(textureHeight, vertInPosition).r-0.5;
-				float v = height * 0.02 - 0.007;
+				float v = height * parallaxCoef - 0.007;
 				vec3 eye = normalize(eyeVec);
 				textureCoords = vertInPosition + (eye.xy * v).yx;
 			}

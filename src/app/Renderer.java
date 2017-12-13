@@ -34,7 +34,8 @@ public class Renderer implements GLEventListener, MouseListener,
     OGLBuffers grid;
 	OGLTextRenderer textRenderer;
 
-	int locLightPos, locEyePos, locMatGrid, shaderProgram, locRenderFunction, locLightPerVertex, locTexture, locMapType, locParallaxScale;
+	int locLightPos, locEyePos, locMatGrid, shaderProgram, locRenderFunction, locLightPerVertex, locTexture, locMapType, locParallaxCoef;
+	float parallaxCoef;
 
     Vec3D lightPos = new Vec3D(0,0,150);
 
@@ -61,7 +62,7 @@ public class Renderer implements GLEventListener, MouseListener,
         locEyePos = gl.glGetUniformLocation(shaderProgram,"eyePos");
         locTexture = gl.glGetUniformLocation(shaderProgram, "useTexture");
         locMapType = gl.glGetUniformLocation(shaderProgram, "mappingType");
-        locParallaxScale = gl.glGetUniformLocation(shaderProgram, "parallaxScale");
+        locParallaxCoef = gl.glGetUniformLocation(shaderProgram, "parallaxCoef");
         locRenderFunction = gl.glGetUniformLocation(shaderProgram, "renderFunction");
         locLightPerVertex = gl.glGetUniformLocation(shaderProgram, "lightPerVertex");
 
@@ -72,7 +73,7 @@ public class Renderer implements GLEventListener, MouseListener,
         texture = new OGLTexture2D(gl, "/textures/bricks.jpg");
         textureNormal = new OGLTexture2D(gl, "/textures/bricksn.png");
         textureHeight = new OGLTexture2D(gl, "/textures/bricksh.png");
-        grid = MeshGenerator.generateGrid(gl, 100, 100, "inPos");
+        grid = MeshGenerator.generateGrid(gl, 200, 200, "inPos");
 		gl.glEnable(GL2GL3.GL_DEPTH_TEST);
 	}
 
@@ -96,7 +97,7 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glUniform1f(locTexture, (useTexture)?1f:0f);
         gl.glUniform1f(locMapType, (float) mappingType);
 
-        gl.glUniform1f(locParallaxScale, 0.1f);
+        gl.glUniform1f(locParallaxCoef, parallaxCoef);
 
 
         texture.bind(shaderProgram, "texture", 0);
@@ -129,8 +130,11 @@ public class Renderer implements GLEventListener, MouseListener,
     public void setMappingType(int mappingType){
         this.mappingType=mappingType;
     }
+    public void setParallaxCoef(float parallaxCoef) {
+        this.parallaxCoef = parallaxCoef;
+    }
 
-	@Override
+    @Override
 	public void mouseClicked(MouseEvent e) {
 	}
 

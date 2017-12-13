@@ -88,16 +88,16 @@ vec3 funcSphere(vec2 inPos){
 } 
 
 vec3 funcFountain(vec2 inPos){
-	float s = PI * 0.5 - 2*PI * inPos.x;
+	float s = 2*PI * inPos.x;
 	float t = PI * inPos.y;
 	
-	float r = cos(t*2)*sin(PI/4*cos(t*2)*sin(s/2))/4;
+	float r = cos(t*2)*sin(PI/4*cos(t*4));
 	float phi = t;
     float theta = s;
     
-	return vec3(cos(t) * cos(s) * r,
-			sin(t) * cos(s) * r, 
-			sin(s) * r);
+	return vec3(cos(theta) * sin(phi) * r,
+			sin(theta) * sin(phi) * r,
+			cos(phi) * r);
 } 
 
 vec3 funcElephantHead(vec2 inPos){
@@ -115,7 +115,7 @@ vec3 funcElephantHead(vec2 inPos){
 
 vec3 funcRainDrop(vec2 inPos){
 	float s = PI * 0.5 - 2*PI * inPos.x;
-	float t = PI * inPos.y;
+	float t = (PI * inPos.y)/2;
 
 	float r = -(t-PI/2);
 	float phi = t;
@@ -123,7 +123,7 @@ vec3 funcRainDrop(vec2 inPos){
 
 	return vec3(cos(theta) * sin(phi) * r,
 			sin(theta) * sin(phi) * r,
-			cos(phi) * r)/2;
+			cos(phi) * r);
 }
 
 vec3 funcAlien(vec2 inPos){
