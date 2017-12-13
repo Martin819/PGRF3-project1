@@ -13,6 +13,7 @@ uniform float renderFunction;
 uniform float lightPerVertex;
 uniform float useTexture;
 uniform float mappingType;
+uniform float time;
 
 /* function definitions */
 /* cartesian */
@@ -224,4 +225,8 @@ void main() {
 			vertColor=vec3(inPos,0) * (min(ambient + diff,1)) + vec3(1,1,1) * spec;
 		}
 	}
-} 
+}
+/*
+float w = cos(time) * 0.5 + 0.5;
+return w * sphere(paramPos) + (1 - w) * something(paramPos);
+*/

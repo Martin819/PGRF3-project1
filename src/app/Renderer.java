@@ -23,25 +23,25 @@ import java.awt.event.*;
 
 public class Renderer implements GLEventListener, MouseListener,
 		MouseMotionListener, KeyListener {
-    public static final int FUNCTION_SADDLE = 0, FUNCTION_SNAKE = 1, FUNCTION_CONE = 2, FUNCTION_SOMBRERO = 3, FUNCTION_MUSHROOM = 4, FUNCTION_WINE_GLASS = 5,
+    static final int FUNCTION_SADDLE = 0, FUNCTION_SNAKE = 1, FUNCTION_CONE = 2, FUNCTION_SOMBRERO = 3, FUNCTION_MUSHROOM = 4, FUNCTION_WINE_GLASS = 5,
             FUNCTION_SPHERE = 6, FUNCTION_ELHEAD = 7, FUNCTION_ALIEN = 8, FUNCTION_ROSE = 9, FUNCTION_RAINDROP = 10, FUNCTION_FOUNTAIN = 11;
-    public static final int MAPPING_NONE = 0, MAPPING_NORMAL = 1, MAPPING_PARALLAX = 2;
+    static final int MAPPING_NONE = 0, MAPPING_NORMAL = 1, MAPPING_PARALLAX = 2;
 
-	int width, height, ox, oy, polygonMode = GL2GL3.GL_FILL;
-    int renderedFunction=0, mappingType=0;
-    boolean lightPerVertex,useTexture;
+	private int width, height, ox, oy, polygonMode = GL2GL3.GL_FILL;
+    private int renderedFunction=0, mappingType=0;
+    private boolean lightPerVertex,useTexture;
 
-    OGLBuffers grid;
-	OGLTextRenderer textRenderer;
+    private OGLBuffers grid;
+	private OGLTextRenderer textRenderer;
 
-	int locLightPos, locEyePos, locMatGrid, shaderProgram, locRenderFunction, locLightPerVertex, locTexture, locMapType, locParallaxCoef;
-	float parallaxCoef;
+	private int locLightPos, locEyePos, locMatGrid, shaderProgram, locRenderFunction, locLightPerVertex, locTexture, locMapType, locParallaxCoef, locTime;
+	private float parallaxCoef, time;
 
-    Vec3D lightPos = new Vec3D(0,0,150);
+    private Vec3D lightPos = new Vec3D(0,0,150);
 
-	Camera cam = new Camera();
-	Mat4 proj;
-    OGLTexture2D texture, textureNormal, textureHeight;
+	private Camera cam = new Camera();
+	private Mat4 proj;
+    private OGLTexture2D texture, textureNormal, textureHeight;
 
 	@Override
 	public void init(GLAutoDrawable glDrawable) {
@@ -65,6 +65,7 @@ public class Renderer implements GLEventListener, MouseListener,
         locParallaxCoef = gl.glGetUniformLocation(shaderProgram, "parallaxCoef");
         locRenderFunction = gl.glGetUniformLocation(shaderProgram, "renderFunction");
         locLightPerVertex = gl.glGetUniformLocation(shaderProgram, "lightPerVertex");
+        locTime = gl.glGetUniformLocation(shaderProgram, "time");
 
 
 		cam = cam.withPosition(new Vec3D(5, 5, 2.5))
@@ -84,7 +85,7 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glPolygonMode(GL2GL3.GL_FRONT_AND_BACK, polygonMode);
         gl.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         gl.glClear(GL2GL3.GL_COLOR_BUFFER_BIT | GL2GL3.GL_DEPTH_BUFFER_BIT);
-
+        time +=0.1;
         Mat4 mat = cam.getViewMatrix().mul(proj);
 
         gl.glUseProgram(shaderProgram);
@@ -98,6 +99,7 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glUniform1f(locMapType, (float) mappingType);
 
         gl.glUniform1f(locParallaxCoef, parallaxCoef);
+        gl.glUniform1f(locTime, time);
 
 
         texture.bind(shaderProgram, "texture", 0);
