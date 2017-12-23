@@ -13,6 +13,7 @@ uniform float renderFunction;
 uniform float lightPerVertex;
 uniform float useTexture;
 uniform float mappingType;
+uniform float time;
 
 /* function definitions */
 /* cartesian */
@@ -154,6 +155,7 @@ vec3 funcRose(vec2 inPos){
 
 /* selector */
 vec3 paramPos(vec2 inPos){
+    float w = cos(time) * 0.5 + 0.5;
 	if(renderFunction == 0){
 		return funcSaddle(inPos);
 	}else if(renderFunction == 1){
@@ -177,7 +179,8 @@ vec3 paramPos(vec2 inPos){
     }else if(renderFunction == 10){
         return funcRainDrop(inPos);
     }else if(renderFunction == 11){
-        return funcFountain(inPos);
+/*        return funcFountain(inPos);*/
+          return w * funcFountain(inPos) + (1 - w) * funcRainDrop(inPos);
     }
 }
 vec3 paramNormal(vec2 inPos) {
@@ -224,4 +227,8 @@ void main() {
 			vertColor=vec3(inPos,0) * (min(ambient + diff,1)) + vec3(1,1,1) * spec;
 		}
 	}
-} 
+}
+/*
+float w = cos(time) * 0.5 + 0.5;
+return w * sphere(paramPos) + (1 - w) * something(paramPos);
+*/
