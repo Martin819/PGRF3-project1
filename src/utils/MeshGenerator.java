@@ -1,5 +1,6 @@
 package utils;
 
+import com.jogamp.opengl.GL2GL3;
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.Seq;
@@ -9,10 +10,6 @@ import oglutils.ToFloatArray;
 import oglutils.ToIntArray;
 import org.jetbrains.annotations.NotNull;
 import transforms.Vec2D;
-import com.jogamp.opengl.GL2GL3;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MeshGenerator {
 

@@ -29,12 +29,12 @@ public class Renderer implements GLEventListener, MouseListener,
 
 	private int width, height, ox, oy, polygonMode = GL2GL3.GL_FILL;
     private int renderedFunction=0, mappingType=0;
-    private boolean lightPerVertex,useTexture;
+    private boolean lightPerVertex, useTexture, useAnimation;
 
     private OGLBuffers grid;
 	private OGLTextRenderer textRenderer;
 
-	private int locLightPos, locEyePos, locMatGrid, shaderProgram, locRenderFunction, locLightPerVertex, locTexture, locMapType, locParallaxCoef, locTime;
+	private int locLightPos, locEyePos, locMatGrid, shaderProgram, locRenderFunction, locLightPerVertex, locTexture, locAnimation, locMapType, locParallaxCoef, locTime;
 	private float parallaxCoef, time;
 
     private Vec3D lightPos = new Vec3D(0,0,150);
@@ -61,6 +61,7 @@ public class Renderer implements GLEventListener, MouseListener,
         locLightPos = gl.glGetUniformLocation(shaderProgram, "lightPos");
         locEyePos = gl.glGetUniformLocation(shaderProgram,"eyePos");
         locTexture = gl.glGetUniformLocation(shaderProgram, "useTexture");
+        locAnimation = gl.glGetUniformLocation(shaderProgram, "useAnimation");
         locMapType = gl.glGetUniformLocation(shaderProgram, "mappingType");
         locParallaxCoef = gl.glGetUniformLocation(shaderProgram, "parallaxCoef");
         locRenderFunction = gl.glGetUniformLocation(shaderProgram, "renderFunction");
@@ -96,7 +97,9 @@ public class Renderer implements GLEventListener, MouseListener,
         gl.glUniform1f(locRenderFunction, (float) renderedFunction);
         gl.glUniform1f(locLightPerVertex, (lightPerVertex)?1f:0f);
         gl.glUniform1f(locTexture, (useTexture)?1f:0f);
-        gl.glUniform1f(locMapType, (float) mappingType);
+		gl.glUniform1f(locAnimation, (useAnimation)?1f:0f);
+
+		gl.glUniform1f(locMapType, (float) mappingType);
 
         gl.glUniform1f(locParallaxCoef, parallaxCoef);
         gl.glUniform1f(locTime, time);
@@ -129,6 +132,9 @@ public class Renderer implements GLEventListener, MouseListener,
     public void setUseTexture(boolean useTexture){
         this.useTexture=useTexture;
     }
+    public void setUseAnimation(boolean useAnimation) {
+        this.useAnimation = useAnimation;
+    }
     public void setMappingType(int mappingType){
         this.mappingType=mappingType;
     }
@@ -160,8 +166,8 @@ public class Renderer implements GLEventListener, MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		cam = cam.addAzimuth((double) Math.PI * (ox - e.getX()) / width)
-				.addZenith((double) Math.PI * (e.getY() - oy) / width);
+		cam = cam.addAzimuth(Math.PI * (ox - e.getX()) / width)
+				.addZenith(Math.PI * (e.getY() - oy) / width);
 		ox = e.getX();
 		oy = e.getY();
 	}

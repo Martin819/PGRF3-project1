@@ -5,14 +5,10 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.Hashtable;
 
 public class JOGLApp {
@@ -21,11 +17,10 @@ public class JOGLApp {
 	private static JFrame frame;
 	private static JMenu mappingMenu;
 	private static Renderer ren;
-	private static JCheckBoxMenuItem jchkUseTexture;
+	private static JCheckBoxMenuItem jchkUseTexture, jchkUseAnimation;
 	private static JSlider parallaxCoefSlider;
 	private static JLabel sliderValue;
     private static final Dimension windowSize= new Dimension(1024, 768);
-	private static Image info;
     public static void main(String[] args) {
 		try {
 			frame = new JFrame("TestFrame");
@@ -54,13 +49,10 @@ public class JOGLApp {
 	    	frame.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					new Thread() {
-	                     @Override
-	                     public void run() {
-	                        if (animator.isStarted()) animator.stop();
-	                        System.exit(0);
-	                     }
-	                  }.start();
+					new Thread(() -> {
+                       if (animator.isStarted()) animator.stop();
+                       System.exit(0);
+                    }).start();
 				}
 			});
             frame.setTitle(APP_TITLE);
@@ -164,6 +156,7 @@ public class JOGLApp {
             menuLightPerPixel.addActionListener(e -> {
                     ren.setLightPerVertex(false);
                     toggleMappingMenu(true);
+                    parallaxCoefSlider.setEnabled(true);
                 });
             lightsMenu.add(menuLightPerPixel);
             btnLights.add(menuLightPerPixel);
@@ -172,6 +165,7 @@ public class JOGLApp {
             menuLightPerVertex.addActionListener(e -> {
                     ren.setLightPerVertex(true);
                     toggleMappingMenu(false);
+                    parallaxCoefSlider.setEnabled(false);
                 });
             lightsMenu.add(menuLightPerVertex);
             btnLights.add(menuLightPerVertex);
@@ -242,22 +236,21 @@ public class JOGLApp {
 		menuBar.add(parallaxCoefSlider);
         menuBar.add(Box.createHorizontalGlue());
 
+/* ANIAMTION_TRIGGER */
+
+        jchkUseAnimation = new JCheckBoxMenuItem("Animation");
+        jchkUseAnimation.addActionListener(e1 -> ren.setUseAnimation(jchkUseAnimation.getState()));
+        menuBar.add(jchkUseAnimation);
+        menuBar.add(Box.createHorizontalGlue());
+
 /* INFO */
-		try
-		{
-			info = ImageIO.read(new File("res/img/info.png"));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-        JButton btnAbout = new JButton(new ImageIcon(info));
+        JButton btnAbout = new JButton("info");
 		btnAbout.setFocusable(false);
-		btnAbout.addActionListener(e ->  {
-				JOptionPane.showMessageDialog(frame,
-                        "Controls:\nMovement: WSAD, Ctrl, Shift \nRotation: mouse \nFirst pesron: Space \nPolygon mode: L(Line), P(Fill)",
-                        "About",JOptionPane.INFORMATION_MESSAGE);
-		});
+		btnAbout.addActionListener(e -> JOptionPane.showMessageDialog(frame,
+            "CONTROLS:\n\nMovement: WSAD, Ctrl, Shift \nRotation: mouse \nFirst pesron: Space " +
+            "\n\nPolygon mode: L(Line), P(Fill) \n\nChange slider position to set parallax mapping coefficient " +
+            "\n  (only when Parallax mapping and Per Pixel lightning are selected) \n\nCheck the 'Animation' box to turn on animation to Sphere",
+            "About",JOptionPane.INFORMATION_MESSAGE));
 		menuBar.add(btnAbout);
 		return menuBar;
 	}
